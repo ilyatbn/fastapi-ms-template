@@ -1,0 +1,38 @@
+#This compose file is meant to be used for local development only. Please do not run this in production.
+
+version: '3.1'
+
+services:
+  postgres:
+    image: docker.io/bitnami/postgresql:14
+    restart: always
+    environment:
+      POSTGRESQL_USERNAME: mecauser
+      POSTGRESQL_PASSWORD: mecapass
+      POSTGRESQL_DATABASE: meca      
+      POSTGRESQL_REPLICATION_MODE: master
+      POSTGRESQL_REPLICATION_USER: mecaruserrep
+      POSTGRESQL_REPLICATION_PASSWORD: mecapassrep
+    volumes:
+      - pgs:/var/lib/postgresql/data
+    networks:
+      - basenet
+  base_img:
+    image: ilyatbn/base_img-dev:latest
+    restart: always
+    user: 1000:1000
+    depends_on: [postgres]
+    environment:
+      DB_URI: postgres://mecauser:mecapass@postgres
+    volumes:
+      - ../src:/app
+    ports:
+      - "8101:8101"
+    networks:
+      - basenet
+
+volumes:
+  pgs:
+networks:
+  basenet:
+    name: base_network

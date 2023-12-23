@@ -1,0 +1,1 @@
+# models.py separated methods from actual SQLAlchemy models.
