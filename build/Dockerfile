@@ -2,7 +2,7 @@ FROM python:3.11.7-slim-bullseye
 RUN apt-get update -qq\
     && apt-get -y install libpq-dev gcc \
     && pip install --upgrade pip \
-    && pip install psycopg2 
+    && pip install psycopg2
 COPY build/requirements.txt /tmp/
 RUN python3 -m pip install -r /tmp/requirements.txt
 COPY src /app

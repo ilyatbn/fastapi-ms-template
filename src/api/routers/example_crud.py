@@ -37,7 +37,7 @@ async def get(item_id: str, request: Request, response_model=UserModelData):
 @router.post("/")
 async def create(request: Request, user=UserModelData):
     sample_user_data.append(user.model_dump_json())
-    return 
+    return
 
 # @router.put("/users/")
 # @router.patch("/users/")

@@ -30,5 +30,5 @@ class Settings(BaseSettings):
             # just to make sure we are using the correct engine for connection
             conn = urlunparse(urlparse(self.POSTGRES_URI)._replace(scheme=DBEngine.POSTGRES.value))
         return conn
-        
+
 config = Settings()

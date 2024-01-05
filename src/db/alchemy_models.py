@@ -2,7 +2,7 @@ from core.db_client import Base
 from sqlalchemy import Boolean, ForeignKey, Integer, String
 from sqlalchemy.orm import mapped_column
 
- 
+
 class UserModel(Base):
     __tablename__ = "app_user"
     _table_args__ = {'extend_existing': True}

@@ -29,7 +29,7 @@ class AbstractBase(metaclass=Singleton):
                 result_data.append(item[0])
             return result_data
 
-    # updates require commits so 
+    # updates require commits so
     async def _exec(self, statement):
         logger.debug(f"perform db data manipulation exec:{statement}")
         async with sessionmanager.session() as session:
@@ -59,7 +59,7 @@ class AbstractBase(metaclass=Singleton):
         statement = insert(self.model).values(**kwargs)
         # SQLite provided with python is an older version that doesn't support returning..
         if config.DB_ENGINE == DBEngine.POSTGRES.value:
-            statement = statement.returning(*self.model_columns)            
+            statement = statement.returning(*self.model_columns)
         result = await self._exec(statement)
         return result
 
@@ -85,11 +85,7 @@ class AbstractBase(metaclass=Singleton):
         create_data = self._parse_data(kwargs)
         result = await self.insert_item(**create_data)
         result_pk = {"id": result.inserted_primary_key.id}
-        return (
-            result_pk
-            if config.DB_ENGINE == DBEngine.SQLITE.value 
-            else result
-        )
+        return result_pk if config.DB_ENGINE == DBEngine.SQLITE.value else result
 
     async def update_item_by_id(self, item_id: int, **kwargs):
         update_data = self._parse_data(kwargs)

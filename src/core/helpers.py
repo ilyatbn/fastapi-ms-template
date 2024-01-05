@@ -27,4 +27,3 @@ class Singleton(type):
             with lock:
                 cls._instances[key] = super().__call__(*args, **kwargs)
         return cls._instances[key]
-

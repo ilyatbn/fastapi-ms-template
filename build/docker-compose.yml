@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRESQL_USERNAME: test
       POSTGRESQL_PASSWORD: test
-      POSTGRESQL_DATABASE: test      
+      POSTGRESQL_DATABASE: test
       POSTGRESQL_REPLICATION_MODE: master
       POSTGRESQL_REPLICATION_USER: testrep
       POSTGRESQL_REPLICATION_PASSWORD: testrep
