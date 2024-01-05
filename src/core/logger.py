@@ -1,1 +1,4 @@
-# TODO: implement a logger that excludes certain patterns
+import logging
+
+# TODO: implement normal logger..
+logger = logging.getLogger()

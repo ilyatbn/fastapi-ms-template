@@ -7,12 +7,12 @@ services:
     image: docker.io/bitnami/postgresql:14
     restart: always
     environment:
-      POSTGRESQL_USERNAME: mecauser
-      POSTGRESQL_PASSWORD: mecapass
-      POSTGRESQL_DATABASE: meca      
+      POSTGRESQL_USERNAME: test
+      POSTGRESQL_PASSWORD: test
+      POSTGRESQL_DATABASE: test      
       POSTGRESQL_REPLICATION_MODE: master
-      POSTGRESQL_REPLICATION_USER: mecaruserrep
-      POSTGRESQL_REPLICATION_PASSWORD: mecapassrep
+      POSTGRESQL_REPLICATION_USER: testrep
+      POSTGRESQL_REPLICATION_PASSWORD: testrep
     volumes:
       - pgs:/var/lib/postgresql/data
     networks:
@@ -23,7 +23,7 @@ services:
     user: 1000:1000
     depends_on: [postgres]
     environment:
-      DB_URI: postgres://mecauser:mecapass@postgres
+      PORSGRES_URI: postgres://test:test@postgres
     volumes:
       - ../src:/app
     ports:
