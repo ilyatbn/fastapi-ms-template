@@ -14,7 +14,7 @@ class AbstractBase(metaclass=Singleton):
     def __init__(self) -> None:
         if not sessionmanager._sessionmaker:
             sessionmanager.init(config.DATABASE_URI)
-        logger.debug("initialized model instance")
+            logger.debug("initialized model instance")
 
     async def _query(self, statement):
         logger.debug(f"perform db query exec:{statement}")
@@ -84,8 +84,9 @@ class AbstractBase(metaclass=Singleton):
     async def create_item(self, **kwargs):
         create_data = self._parse_data(kwargs)
         result = await self.insert_item(**create_data)
-        result_pk = {"id": result.inserted_primary_key.id}
-        return result_pk if config.DB_ENGINE == DBEngine.SQLITE.value else result
+        result_item = {"id": result.inserted_primary_key.id}
+        result_item.update(result.last_inserted_params())
+        return result_item
 
     async def update_item_by_id(self, item_id: int, **kwargs):
         update_data = self._parse_data(kwargs)

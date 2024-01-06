@@ -19,8 +19,10 @@ class DatabaseSessionManager:
         self.engine: AsyncEngine | None = None
         self._sessionmaker: async_sessionmaker | None = None
 
-    def init(self, host: str):
+    def init(self, host: str, autocommit: str = False):
         self.engine = create_async_engine(host)
+        if autocommit:
+            self.engine = self.engine.execution_options(isolation_level="AUTOCOMMIT")
         self._sessionmaker = async_sessionmaker(autocommit=False, bind=self.engine)
 
     async def close(self):
@@ -57,14 +59,10 @@ class DatabaseSessionManager:
             await session.close()
 
     async def create_all(self):
-        # all models have to be imported before this can work.. sucks. need to figure out a way to do this right..
-        from db.models import User
         async with self.connect() as conn:
             await conn.run_sync(Base.metadata.create_all)
 
-
 sessionmanager = DatabaseSessionManager()
-
 
 async def session():
     async with sessionmanager.session() as session:

@@ -23,7 +23,8 @@ services:
     user: 1000:1000
     depends_on: [postgres]
     environment:
-      PORSGRES_URI: postgres://test:test@postgres
+      DB_ENGINE: postgres #can be either sqlite or postgres
+      POSTGRES_URI: postgres://test:test@build-postgres-1
     volumes:
       - ../src:/app
     ports:

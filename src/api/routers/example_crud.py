@@ -1,10 +1,10 @@
-from fastapi import APIRouter
-from api.models.api_models import UserModelData
-from fastapi import status, Request, responses
-from typing import List
 from datetime import datetime
+from typing import List
 from uuid import uuid4
 
+from fastapi import APIRouter, Request, responses, status
+
+from api.schemas.api_schemas import UserModelData
 
 router = APIRouter(prefix="/users")
 
