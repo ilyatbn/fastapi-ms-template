@@ -1,7 +1,8 @@
 dev:
 - finish basic api and fastapi pydantic models that work with the db model. make basic CRUD operations.
+- swagger redirect
 - implement cors
-- implement logger
+- implement better logger
 - implement basic jwt/auth0
 
 ops:
