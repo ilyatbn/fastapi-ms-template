@@ -49,6 +49,11 @@ class AbstractBase(metaclass=Singleton):
         return getattr(self.model, attr)
 
     # query data by single key:value filter
+    async def all(self):
+        statement = select(self.model)
+        return await self._query(statement)
+
+    # query data by single key:value filter
     async def get_item(self, attr, value=None):
         attr = self._get_attr(attr)
         statement = select(self.model).where(attr == value)
@@ -77,7 +82,7 @@ class AbstractBase(metaclass=Singleton):
         result = await self._exec(statement)
         return result
 
-    async def get_item_by_id(self, item_id):
+    async def get_item_by_id(self, item_id: int):
         result = await self.get_item("id", item_id)
         return result[0] if result else None
 
@@ -90,13 +95,13 @@ class AbstractBase(metaclass=Singleton):
 
     async def update_item_by_id(self, item_id: int, **kwargs):
         update_data = self._parse_data(kwargs)
-        return await self.update_item("id", item_id, **update_data)
+        result = await self.update_item("id", item_id, **update_data)
+        return result.last_updated_params()
 
     async def delete_item_by_id(self, item_id: int, **kwargs):
         update_data = self._parse_data(kwargs)
-        return await self.delete_item("id", item_id, **update_data)
-
-
+        result = await self.delete_item("id", item_id, **update_data)
+        return result.rowcount > 0
 
 class User(AbstractBase):
     model = UserModel

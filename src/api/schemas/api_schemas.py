@@ -6,12 +6,23 @@ from pydantic import BaseModel
 
 
 class BaseModelMetadata(BaseModel):
-    item_id: Optional[str] = str(uuid4())
-    created_at: Optional[datetime] = None
-    created_by: Optional[str] = None
+    class Config:
+        orm_mode = True
 
 
-class UserModelData(BaseModelMetadata):
+class BaseModelGet:
+    id: Optional[int] = None
+
+
+class UserModelDataCreate(BaseModelMetadata):
     username: str
-    email: Optional[str] = None
-    description: Optional[str] = None
+    display_name: Optional[str] = None
+    enabled: Optional[bool] = None
+
+
+class UserModelDataUpdate(UserModelDataCreate):
+    username: Optional[str] = None
+
+
+class UserModelDataGet(BaseModelGet, UserModelDataCreate):
+    pass
