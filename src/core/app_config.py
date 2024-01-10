@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     DB_ENGINE: str = Field(default=DBEngine.SQLITE.name)
     SQLITE_DATA_PATH: str = Field(default="/./database.db")
     POSTGRES_URI: str = Field(default="postgres://test:test@postgres/database")
+    CORS_ALLOWED_ORIGINS: list = Field(default=["*"])
+    CORS_ALLOWED_METHODS: list = Field(default=["*"])
+    CORS_ALLOWED_HEADERS: list = Field(default=["*"])
+    CORS_ALLOW_CREDENTIALS: bool = Field(default=False)
 
     @field_validator("DB_ENGINE")
     def validate_db_engine(cls, value: str):

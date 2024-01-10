@@ -1,13 +1,10 @@
-from datetime import datetime
 from typing import Optional
-from uuid import uuid4
-
 from pydantic import BaseModel
 
 
 class BaseModelMetadata(BaseModel):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class BaseModelGet:
