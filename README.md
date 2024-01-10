@@ -1,10 +1,12 @@
 
 ## Python API service quickstart
-There's probably a bunch of these to be found online. This is my implementation of FastAPI, coupled with SQLAlchemy and PostgreSQL or SQLite as a backend.
+This is my implementation of FastAPI, coupled with SQLAlchemy and PostgreSQL or SQLite as a backend.
+There are many different examples of this found around the web. This version has some neat tricks that I couldn't find in other code, and some modifications to existing code I found and liked.
 
+**Features are added here based on my personal needs while I work on other services which are based on this template. As long as they are generic and can help ease setup pains, they will be added here.**
 ### Features
-- FastAPI.
-- SQLAlchemy with PostgreSQL/SQLite.
+- FastAPI with a semi-modular BaseRouter class which is hopefully quite easy to use.
+- SQLAlchemy with PostgreSQL/SQLite support. Currently manual database and table creation methods are provided. Alembic migration support is on the roadmap.
 
 
 ### Prerequisites and Installation
@@ -19,7 +21,7 @@ There's probably a bunch of these to be found online. This is my implementation 
     make shell
     ```
 
-3. Inside the IPython shell, run the following:
+3. Inside the IPython shell, run the following to initialize the database and templates:
     ```
     from core.db_helpers import first_run
     await first_run()
