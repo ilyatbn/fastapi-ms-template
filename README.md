@@ -23,7 +23,7 @@ There are many different examples of this found around the web. This version has
 
 3. Inside the IPython shell, run the following to initialize the database and templates:
     ```
-    from core.db_helpers import first_run
+    from db.helpers import first_run
     await first_run()
     ```
 ---

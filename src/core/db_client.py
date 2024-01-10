@@ -1,4 +1,5 @@
-# used this awesome https://praciano.com.br/fastapi-and-async-sqlalchemy-20-with-pytest-done-right.html
+# based on this awesome implementation.
+# https://praciano.com.br/fastapi-and-async-sqlalchemy-20-with-pytest-done-right.html
 
 import contextlib
 from typing import AsyncIterator
