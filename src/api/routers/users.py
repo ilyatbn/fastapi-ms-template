@@ -1,5 +1,3 @@
-from fastapi import Request
-
 from api.routers.base_router import BaseRouter
 from api.schemas.api_schemas import (
     UserModelDataCreate,
