@@ -15,51 +15,59 @@ class BaseRouter:
     model = None
 
     def __init__(self) -> None:
-        if not self.prefix.startswith("/"):
-            self.prefix = f"/{self.prefix}"
         self.router = APIRouter(prefix=f"{self.prefix}")
-        # TODO: maybe move all this to a different method and add "allowed methods"
-        # TODO: maybe split this and create like "mixins" in drf... idk.
-        self.router.add_api_route(
-            "/",
-            self.list,
-            methods=["GET"],
-            tags=[self.prefix.capitalize()],
-            response_model=List[self.query_object_schema],
-        )
-        self.router.add_api_route(
-            "/{item_id}",
-            self.get,
-            methods=["GET"],
-            tags=[self.prefix.capitalize()],
-            response_model=self.query_object_schema,
-        )
-        self.router.add_api_route(
-            "/",
-            self.create,
-            methods=["POST"],
-            tags=[self.prefix.capitalize()],
-            response_model=self.query_object_schema,
-        )
-        self.router.add_api_route(
-            "/{item_id}",
-            self.update,
-            methods=["PUT", "PATCH"],
-            tags=[self.prefix.capitalize()],
-            response_model=self.query_object_schema,
-        )
-        self.router.add_api_route(
-            "/{item_id}",
-            self.delete,
-            methods=["DELETE"],
-            tags=[self.prefix.capitalize()],
-        )
-        self.model = self.model()
+        self.model = self.model() if isinstance(self.model, type) else None
+        self._init_routes()
+
+    def _init_routes(self):
+        # enable CRUD routes based on class attributes.
+        if self.model:
+            self.router.add_api_route(
+                "/",
+                self.list,
+                methods=["GET"],
+                tags=[self.prefix.capitalize()],
+                response_model=List[self.query_object_schema],
+            )
+            self.router.add_api_route(
+                "/{item_id}",
+                self.get,
+                methods=["GET"],
+                tags=[self.prefix.capitalize()],
+                response_model=self.query_object_schema,
+            )
+            self.router.add_api_route(
+                "/{item_id}",
+                self.delete,
+                methods=["DELETE"],
+                tags=[self.prefix.capitalize()],
+            )
+
+            if self.create_object_schema:
+                self.router.add_api_route(
+                    "/",
+                    self.create,
+                    methods=["POST"],
+                    tags=[self.prefix.capitalize()],
+                    response_model=self.query_object_schema,
+                )
+            if self.update_object_schema:
+                self.router.add_api_route(
+                    "/{item_id}",
+                    self.update,
+                    methods=["PUT"],
+                    tags=[self.prefix.capitalize()],
+                    response_model=self.query_object_schema,
+                )
+                self.router.add_api_route(
+                    "/{item_id}",
+                    self.update,
+                    methods=["PATCH"],
+                    tags=[self.prefix.capitalize()],
+                    response_model=self.query_object_schema,
+                )
 
     async def list(self, request: Request):
-        # TODO: pagination..
-        # TODO: filters by queryparams..
-        # TODO: base filter by access permissions..
         return await self.model.all()
 
     async def get(self, item_id: int, request: Request):
