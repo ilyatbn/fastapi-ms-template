@@ -1,7 +1,7 @@
 import inspect
 from typing import List
-
 from fastapi import APIRouter, Request, responses, status
+from db.helpers import database_exception_handler
 
 create_object_var = "create_object"
 update_object_var = "update_object"
@@ -15,7 +15,9 @@ class BaseRouter:
     model = None
 
     def __init__(self) -> None:
-        self.router = APIRouter(prefix=f"/{self.prefix}")
+        if not self.prefix.startswith("/"):
+            self.prefix = f"/{self.prefix}"
+        self.router = APIRouter(prefix=f"{self.prefix}")
         # TODO: maybe move all this to a different method and add "allowed methods"
         # TODO: maybe split this and create like "mixins" in drf... idk.
         self.router.add_api_route(
@@ -69,17 +71,23 @@ class BaseRouter:
         return user_query
 
     async def create(self, request: Request, create_object: create_object_schema):
-        object = await self.model.create_item(
-            **create_object.model_dump(exclude_unset=True)
-        )
+        try:
+            object = await self.model.create_item(
+                **create_object.model_dump(exclude_unset=True)
+            )
+        except Exception as ex:
+            return database_exception_handler(ex)
         return object
 
     async def update(
         self, item_id: int, request: Request, update_object: update_object_schema
     ):
-        object = await self.model.update_item_by_id(
-            item_id=item_id, **update_object.model_dump(exclude_unset=True)
-        )
+        try:
+            object = await self.model.update_item_by_id(
+                item_id=item_id, **update_object.model_dump(exclude_unset=True)
+            )
+        except Exception as ex:
+            return database_exception_handler(ex)
         return object
 
     async def delete(self, item_id: int, request: Request):
@@ -90,7 +98,7 @@ class BaseRouter:
             )
         return True
 
-    # hacky but cool solution. with this you can use a base class with full crud operations with models specified on the child.
+    # hacky but cool solution. this solves working with fastapi type annotations for POST request schemas.
     def reconfigure_annotations(self):
         for method in inspect.getmembers(self, predicate=inspect.ismethod):
             for var in annotated_schemas:
