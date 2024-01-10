@@ -13,7 +13,7 @@ class UsersRouter(BaseRouter):
     query_object_schema = UserModelDataGet
     create_object_schema = UserModelDataCreate
     update_object_schema = UserModelDataUpdate
-    prefix = "users"
+    prefix = "/users"
     model = User
 
     def __init__(self) -> None:
