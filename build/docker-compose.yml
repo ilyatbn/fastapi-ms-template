@@ -1,7 +1,4 @@
 #This compose file is meant to be used for local development only. Please do not run this in production.
-
-version: '3.1'
-
 services:
   postgres:
     image: docker.io/bitnami/postgresql:14

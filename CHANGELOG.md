@@ -1,5 +1,11 @@
 ## Changelog.
 
+### v0.21
+- changed some of the sqlalchemy abstraction to work better.
+- added apscheduler.
+- added a slightly better logging config.
+- added ptpython since ipython is annoying with logging
+
 ### v0.2
 - added abstract FastAPI APIRouter.
 - Added CORS middleware.

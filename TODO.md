@@ -1,5 +1,4 @@
 dev:
-- implement better logger
 - implement basic jwt/auth0
 - database pagination/filters/permissions
 

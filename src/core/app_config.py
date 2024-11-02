@@ -4,17 +4,17 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from core.enums import DBEngine
 from functools import cached_property
 from urllib.parse import urlparse, urlunparse
+import logging
 
 DEFAULT_DATABASE_NAME = "app_db"
 
-# Obviously a very basic app config, not recommended for production use.
-# It would be better to get your config from secret managers / feature flag solutions!
-
-
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(validate_default=False)
+        
+    class Config:
+        env_file = ".env"
+        validate_default = False
 
-    LOGLEVEL: str = Field(default="info")
+    DEFAULT_APP_LOGLEVEL: str = Field(default=logging.INFO)
     DB_ENGINE: str = Field(default=DBEngine.SQLITE.name)
     SQLITE_DATA_PATH: str = Field(default="/./database.db")
     POSTGRES_URI: str = Field(default="postgres://test:test@postgres/database")
@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     CORS_ALLOWED_METHODS: list = Field(default=["*"])
     CORS_ALLOWED_HEADERS: list = Field(default=["*"])
     CORS_ALLOW_CREDENTIALS: bool = Field(default=False)
+    ENABLE_SCHEDULED_TASKS: bool = Field(default=False)
 
     @field_validator("DB_ENGINE")
     def validate_db_engine(cls, value: str):

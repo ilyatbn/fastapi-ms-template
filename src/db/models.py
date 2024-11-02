@@ -1,5 +1,5 @@
 from core.app_config import config
-from core.db_client import sessionmanager
+from core.db_client import DatabaseSessionManager
 from core.helpers import Singleton
 from db.alchemy_models import UserModel
 from sqlalchemy import select, insert, update, delete
@@ -7,18 +7,19 @@ from sqlalchemy.exc import IntegrityError
 from core.logger import logger
 from sqlalchemy.sql.base import ReadOnlyColumnCollection
 from core.enums import DBEngine
-
+from typing import Any, Optional
+from db.models import User
 class AbstractBase(metaclass=Singleton):
     model = None
-
     def __init__(self) -> None:
-        if not sessionmanager._sessionmaker:
-            sessionmanager.init(config.DATABASE_URI)
+        self.sessionmanager = DatabaseSessionManager()        
+        if not self.sessionmanager._sessionmaker:
+            self.sessionmanager.init(config.DATABASE_URI)
             logger.debug("initialized model instance")
 
     async def _query(self, statement):
         logger.debug(f"perform db query exec:{statement}")
-        async with sessionmanager.session() as session:
+        async with self.sessionmanager.session() as session:
             try:
                 result = await session.execute(statement)
             except IntegrityError as ex:
@@ -32,7 +33,7 @@ class AbstractBase(metaclass=Singleton):
     # updates require commits so
     async def _exec(self, statement):
         logger.debug(f"perform db data manipulation exec:{statement}")
-        async with sessionmanager.session() as session:
+        async with self.sessionmanager.session() as session:
             result = await session.execute(statement)
             await session.commit()
             logger.info(f"update affected {result.rowcount} rows.")
@@ -102,6 +103,12 @@ class AbstractBase(metaclass=Singleton):
         update_data = self._parse_data(kwargs)
         result = await self.delete_item("id", item_id, **update_data)
         return result.rowcount > 0
+
+    async def bulk_insert(self, objects: Any):
+        async with self.sessionmanager.session() as session:
+            res = session.add_all(objects)
+            await session.commit()
+            return res
 
 class User(AbstractBase):
     model = UserModel

@@ -7,7 +7,7 @@ There are many different examples of this found around the web. This version has
 ### Features
 - FastAPI with a semi-modular BaseRouter class which is hopefully quite easy to use.
 - SQLAlchemy with PostgreSQL/SQLite support. Currently manual database and table creation methods are provided. Alembic migration support is on the roadmap.
-
+- Simple job scheduling using apscheduler+asyncio.
 
 ### Prerequisites and Installation
 1. Install docker and docker-compose (v2.x)
